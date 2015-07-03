@@ -92,6 +92,10 @@
 
         // updating algorithm parameters
         GraphCommons.Helper.updateLayoutSettings(layout, renderer);
+
+        GraphCommons.Helper.injectGraph = GraphCommons.Helper.allowInject(
+          graph, renderer, layout, svgGraphics);
+          
     }(GraphCommons));
 
   </script>

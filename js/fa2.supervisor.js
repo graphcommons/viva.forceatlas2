@@ -106,6 +106,7 @@ var GraphCommons = GraphCommons || {};
     (this.worker || document).addEventListener(this.msgName, this.listener);
 
     // Filling byteArrays
+    debugger;
     this.nodeIndices = this.graphToByteArrays();
 
     // Binding on kill to properly terminate layout when parent is killed
@@ -191,6 +192,7 @@ var GraphCommons = GraphCommons || {};
     this.viva.graph.forEachNode(function (node) {
       j = _this.nodeIndices[node.id];
       layout.setNodePosition(node.id, _this.nodesByteArray[j], _this.nodesByteArray[j + 1]);
+      console.log('applying');
     });
 
     this.viva.renderer.rerender();
@@ -217,6 +219,7 @@ var GraphCommons = GraphCommons || {};
   };
 
   Supervisor.prototype.start = function() {
+    debugger;
     if (this.running)
       return;
 

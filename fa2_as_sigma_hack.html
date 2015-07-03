@@ -97,6 +97,10 @@
 
         // updating algorithm parameters
         GraphCommons.Helper.initSettings(sigma);
+
+        GraphCommons.Helper.injectGraph = GraphCommons.Helper.allowInject(
+          graph, renderer, layout, svgGraphics, sigma);
+
     }(GraphCommons));
 
   </script>

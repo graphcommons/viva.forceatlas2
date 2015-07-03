@@ -236,4 +236,52 @@ var GraphCommons = GraphCommons || {};
       renderer.resume();
     });
   };
+
+  GraphCommons.Helper.allowInject = function (graph, renderer, layout, graphics, sigma) {
+    return function (obj) {
+      if (sigma) {
+        sigma.killForceAtlas2();
+      }
+
+      graphics.release();
+      graph.clear();
+      document.getElementById('map').innerHTML = '';
+
+
+      graph = Viva.Graph.graph();
+      if (sigma) {
+        layout = Viva.Graph.Layout.constant(graph, {});
+      }
+      else {
+        layout = GraphCommons.Layout.forceAtlas2(graph, {
+          stableThreshold: 2.0,
+          scalingRatio: 40,
+          slowDown: 20
+        });
+      }
+
+      svgGraphics = Viva.Graph.View.svgGraphics();
+
+      obj.graph.edges.forEach(function (edge) {
+        graph.addLink(edge.from, edge.to);
+      });
+
+      renderer = Viva.Graph.View.renderer(graph, {
+          container: document.getElementById('map'),
+          layout: layout,
+          graphics: svgGraphics
+      });
+
+      renderer.run();
+
+      if (sigma) {
+        sigma = new GraphCommons.ForceAtlas2.sigma({
+          graph: graph,
+          layout: layout,
+          renderer: renderer,
+          graphics: svgGraphics
+        });
+      }
+    };
+  };
 }(GraphCommons));

@@ -130,7 +130,7 @@ function forceAtlas2(graph, userSettings) {
     };
 
     var releaseLink = function (link) {
-      var _link = dgeMatrix[link.id];
+      var _link = EdgeMatrix[link.id];
       var _from, _to;
 
       if (_link) {
