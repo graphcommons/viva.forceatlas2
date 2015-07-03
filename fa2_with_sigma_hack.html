@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>01. Create Graph. Vivagraph SVG tutorial.</title>
+    <script type="text/javascript" src="js/vivagraph.js"></script>
+    <script type="text/javascript" src="js/fa2.supervisor.js"></script>
+    <script type="text/javascript" src="js/worker.js"></script>
+    <script type="text/javascript" src="js/helper.js"></script>
+    <link href="main.css" rel="stylesheet"/>
+</head>
+<body>
+  <div id="map" class="map-container"></div>
+  <div class="controller">
+    <input type="checkbox" id="cbForceAtlas2"/><label for="cbForceAtlas2">Toggle ForceAtlas2</label>
+    <br/>
+    <input type="checkbox" id="cbToggleSettings"/><label for="cbToggleSettings">Toggle Settings</label>
+    <div class="settings not-shown" id="settings">
+      <ul>
+        <li>
+          <label>linLogMode</label><input type="checkbox" id="linLogMode"/>
+        </li>
+        <li>
+          <label>outboundAttractionDistribution</label><input type="checkbox" id="outboundAttractionDistribution"/>
+        </li>
+        <li>
+          <label>adjustSizes</label><input type="checkbox" id="adjustSizes"/>
+        </li>
+        <li>
+          <label>edgeWeightInfluence</label><input type="number" step="any" value="0" id="edgeWeightInfluence"/>
+        </li>
+        <li>
+          <label>scalingRatio</label><input type="number" step="any" value="1" id="scalingRatio"/>
+        </li>
+        <li>
+          <label>strongGravityMode</label><input type="checkbox" id="strongGravityMode"/>
+        </li>
+        <li>
+          <label>gravity</label><input type="number" step="any" value="1" id="gravity"/>
+        </li>
+        <li>
+          <label>slowDown</label><input type="number" step="any" value="1" id="slowDown"/>
+        </li>
+        <li>
+          <label>barnesHutOptimize</label><input type="checkbox" id="barnesHutOptimize"/>
+        </li>
+        <li>
+          <label>barnesHutTheta</label><input type="number" step="any" value="0.5" id="barnesHutTheta"/>
+        </li>
+        <li>
+          <label>startingIterations</label><input type="number" value="1" id="startingIterations"/>
+        </li>
+        <li>
+          <label>iterationsPerRender</label><input type="number" value="1" id="iterationsPerRender"/>
+        </li>
+      </ul>
+      <button id="btnUpdateConfig">Update</button>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var GraphCommons = GraphCommons || {};
+      (function() {
+
+        var graph = Viva.Graph.graph();
+        var layout = Viva.Graph.Layout.constant(graph, {});
+        var svgGraphics = Viva.Graph.View.svgGraphics();
+
+        GraphCommons.Helper.addData(graph);
+
+        var renderer = Viva.Graph.View.renderer(graph, {
+            container: document.getElementById('map'),
+            layout: layout,
+            graphics: svgGraphics
+        });
+        renderer.run();
+
+
+        var sigma = new GraphCommons.ForceAtlas2.sigma({
+          graph: graph,
+          layout: layout,
+          renderer: renderer,
+          graphics: svgGraphics
+        });
+
+
+        // toggling force atlas algorithm
+        var cbForceAtlas2 = document.getElementById('cbForceAtlas2');
+        cbForceAtlas2.addEventListener('change', function() {
+          if (this.checked) {
+            console.log('starting fa2');
+            sigma.startForceAtlas2();
+          }
+          else {
+            console.log('stopping fa2');
+            sigma.stopForceAtlas2();
+          }
+        });
+
+        // updating algorithm parameters
+        GraphCommons.Helper.initSettings(sigma);
+    }(GraphCommons));
+
+  </script>
+</body>
+</html>

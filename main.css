@@ -1,0 +1,45 @@
+
+body, svg {
+  padding: 0; margin: 0;
+  box-sizing: border-box;
+  width: 100%; height: 100%;
+}
+
+.controller {
+  position: fixed;
+  z-index: 2;
+}
+
+.map-container {
+  position: fixed;
+  width: 100%; height: 100%;
+  box-sizing: border-box;
+}
+
+.settings {
+  width: 500px;
+  background-color: #DFDFDF;
+  padding: 10px;
+}
+
+.settings ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.settings li {
+  margin-bottom: 8px;
+}
+.settings label {
+  width: 250px;
+  display: inline-block;
+}
+
+.settings input[type="number"]  {
+  width: 80px;
+}
+
+.not-shown {
+  display: none;
+}
