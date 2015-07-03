@@ -265,7 +265,6 @@ function forceAtlas2(graph, userSettings) {
          * and current node placement callback will be used to place it.
          */
         placeNode : function (newPlaceNodeCallbackOrNode) {
-          debugger;
             if (typeof newPlaceNodeCallbackOrNode === 'function') {
                 placeNodeCallback = newPlaceNodeCallbackOrNode;
                 updateNodePositions();

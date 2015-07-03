@@ -6,6 +6,7 @@
     <script type="text/javascript" src="js/fa2.supervisor.js"></script>
     <script type="text/javascript" src="js/worker.js"></script>
     <script type="text/javascript" src="js/helper.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
     <link href="main.css" rel="stylesheet"/>
 </head>
 <body>
@@ -97,9 +98,6 @@
 
         // updating algorithm parameters
         GraphCommons.Helper.initSettings(sigma);
-
-        GraphCommons.Helper.injectGraph = GraphCommons.Helper.allowInject(
-          graph, renderer, layout, svgGraphics, sigma);
 
     }(GraphCommons));
 

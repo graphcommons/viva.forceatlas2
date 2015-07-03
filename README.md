@@ -10,4 +10,7 @@ positions of nodes after each worker update.
 * `fa2_as_layout.html`: Contains the vivagraph layout implementation. ForceAtlas2
 worker is modified to be integrated into the Vivagraph library
 
-Use `GraphCommons.Helper.injectGraph(<paste json here>);` to load a new graph
+#### to load a new graph
+
+1. Go to `js/data.js`
+2. Change the line starting with `var obj = ` and paste a graph.json string.
