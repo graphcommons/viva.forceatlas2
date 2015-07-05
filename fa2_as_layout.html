@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>01. Create Graph. Vivagraph SVG tutorial.</title>
+    <title>FA2 Layout.</title>
     <script type="text/javascript" src="js/vivagraph.js"></script>
     <script type="text/javascript" src="js/viva.layout.fa2.js"></script>
     <script type="text/javascript" src="js/helper.js"></script>
@@ -29,7 +29,7 @@
           <label>edgeWeightInfluence</label><input type="number" step="any" value="0" id="edgeWeightInfluence"/>
         </li>
         <li>
-          <label>scalingRatio</label><input type="number" step="any" value="40" id="scalingRatio"/>
+          <label>scalingRatio</label><input type="number" step="any" value="1" id="scalingRatio"/>
         </li>
         <li>
           <label>strongGravityMode</label><input type="checkbox" id="strongGravityMode"/>
@@ -38,7 +38,7 @@
           <label>gravity</label><input type="number" step="any" value="1" id="gravity"/>
         </li>
         <li>
-          <label>slowDown</label><input type="number" step="any" value="20" id="slowDown"/>
+          <label>slowDown</label><input type="number" step="any" value="1" id="slowDown"/>
         </li>
         <li>
           <label>barnesHutOptimize</label><input type="checkbox" id="barnesHutOptimize"/>
@@ -66,8 +66,9 @@
         var graph = Viva.Graph.graph();
         var layout = GraphCommons.Layout.forceAtlas2(graph, {
           stableThreshold: 2.0,
-          scalingRatio: 40,
-          slowDown: 20
+          scalingRatio: 1,
+          slowDown: 1,
+          barnesHutOptimize: true
         });
         var svgGraphics = Viva.Graph.View.svgGraphics();
 
@@ -78,13 +79,19 @@
             layout: layout,
             graphics: svgGraphics
         });
+
+        graph.forEachNode(function (node) {
+          var pos = layout.getNodePosition(node.id);
+          console.log(node.id, pos.x, pos.y);
+        });
+
         renderer.run();
 
         // toggling force atlas algorithm
         var cbForceAtlas2 = document.getElementById('cbForceAtlas2');
         cbForceAtlas2.addEventListener('change', function() {
           if (this.checked) {
-            renderer.resume();
+            renderer.renderer.resume();
           }
           else {
             renderer.pause();

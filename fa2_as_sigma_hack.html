@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>01. Create Graph. Vivagraph SVG tutorial.</title>
+    <title>FA2 Sigma.</title>
     <script type="text/javascript" src="js/vivagraph.js"></script>
     <script type="text/javascript" src="js/fa2.supervisor.js"></script>
     <script type="text/javascript" src="js/worker.js"></script>
@@ -71,6 +71,10 @@
             container: document.getElementById('map'),
             layout: layout,
             graphics: svgGraphics
+        });
+        graph.forEachNode(function (node) {
+          var pos = layout.getNodePosition(node.id);
+          console.log(node.id, pos.x, pos.y);
         });
         renderer.run();
 

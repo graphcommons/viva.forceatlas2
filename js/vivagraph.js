@@ -3671,6 +3671,18 @@ function constant(graph, userSettings) {
         layoutLinks = {},
 
         placeNodeCallback = function (node) {
+
+            // var fixedPositions = {
+            //   "1a92ab35-997d-0319-4645-c402e6592d5f": {x: 965, y: 734},
+            //   "25fef332-0e89-c4b8-95c5-997e44809f4c": {x: 930, y: 754},
+            //   "4590911f-a924-3b1a-ca03-709d6ed0cc36": {x: 460, y: 359},
+            //   "fe7e8292-3e47-6e4f-c64c-558dbcb75a31": {x: 600, y: 689},
+            //   "f840f867-f53e-63c0-5021-9f51eb087273": {x: 946, y: 30},
+            //   "874efaae-63a7-592c-1975-3132890b07e2": {x: 996, y: 9},
+            //   "49bd93f6-5ec5-b4e6-6f92-f6c26c9df74a": {x: 727, y: 69},
+            //   "f3600f3e-3c5a-d85a-00ed-51209d62e6c0": {x: 322, y: 695}
+            // };
+            // return fixedPositions[node.id];
             return {
               x: rand.next(userSettings.maxX),
               y: rand.next(userSettings.maxY)

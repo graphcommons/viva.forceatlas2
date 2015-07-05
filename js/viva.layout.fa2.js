@@ -72,6 +72,7 @@ function forceAtlas2(graph, userSettings) {
 
     var initNode = function (node) {
         NodeList.push(node.id);
+
         NodeMatrix[node.id] = {
           pos: {
             x: -512 + Math.random() * 1024,
@@ -89,7 +90,7 @@ function forceAtlas2(graph, userSettings) {
 
         NodesCount += 1;
 
-        updateGraphRect(NodeMatrix[node.id], graphRect);
+        updateGraphRect(NodeMatrix[node.id].pos, graphRect);
     };
 
     var releaseNode = function (node) {
@@ -118,7 +119,7 @@ function forceAtlas2(graph, userSettings) {
       };
 
       var fromNode = NodeMatrix[link.fromId];
-      var toNode = NodeMatrix[link.toid];
+      var toNode = NodeMatrix[link.toId];
       if (fromNode) {
         fromNode.mass += 1;
       }
@@ -155,16 +156,16 @@ function forceAtlas2(graph, userSettings) {
         var change = changes[i];
         if (change.node) {
           if (change.changeType === 'add') {
-              initNode(change.node);
+            initNode(change.node);
           } else {
-              releaseNode(change.node);
+            releaseNode(change.node);
           }
         }
         if (change.link) {
           if (change.changeType === 'add') {
-              initLink(change.link);
+            initLink(change.link);
           } else {
-              releaseLink(change.link);
+            releaseLink(change.link);
           }
         }
       }
@@ -288,6 +289,11 @@ function forceAtlas2(graph, userSettings) {
   function applyForceAtlas2() {
 
       var a, i, j, l, r, n, n1, n2, e, w, g, k, m;
+      var minX = Infinity,
+          maxX = -Infinity,
+          minY = Infinity,
+          maxY = -Infinity;
+
 
       var outboundAttCompensation,
           coefficient,
@@ -331,25 +337,26 @@ function forceAtlas2(graph, userSettings) {
 
       if (settings.barnesHutOptimize) {
 
-        var minX = Infinity,
-            maxX = -Infinity,
-            minY = Infinity,
-            maxY = -Infinity,
-            q, q0, q1, q2, q3;
+        var q, q0, q1, q2, q3;
 
         // Setting up
         // RegionMatrix = new Float32Array(W.nodesLength / W.ppn * 4 * W.ppr);
         RegionMatrix = [];
 
         // Computing min and max values
-        for (n in NodeMatrix) {
-          //if (NodeMatrix.hasOwnPropery(n)) {
-            minX = Math.min(minX, NodeMatrix[n]['pos']['x']);
-            maxX = Math.max(maxX, NodeMatrix[n]['pos']['x']);
-            minY = Math.min(minY, NodeMatrix[n]['pos']['y']);
-            maxY = Math.max(maxY, NodeMatrix[n]['pos']['y']);
-          //}
-        }
+        // for (n in NodeMatrix) {
+        //   //if (NodeMatrix.hasOwnPropery(n)) {
+        //     minX = Math.min(minX, NodeMatrix[n]['pos']['x']);
+        //     maxX = Math.max(maxX, NodeMatrix[n]['pos']['x']);
+        //     minY = Math.min(minY, NodeMatrix[n]['pos']['y']);
+        //     maxY = Math.max(maxY, NodeMatrix[n]['pos']['y']);
+        //   //}
+        // }
+        // min and max values are calculated at the end of the iteration
+        minX = graphRect.x1;
+        minY = graphRect.y1;
+        maxX = graphRect.x2;
+        maxY = graphRect.y2;
 
         // Build the Barnes Hut root region
         RegionMatrix.push({
@@ -377,6 +384,7 @@ function forceAtlas2(graph, userSettings) {
               // Are there sub-regions?
 
               // We look at first child index
+
               if (RegionMatrix[r]['firstChild'] >= 0) {
 
                 // There are sub-regions
@@ -396,19 +404,19 @@ function forceAtlas2(graph, userSettings) {
                   else {
 
                     // Bottom Left quarter
-                    q = RegionMatrix[r + 1]['firstChild']; // TODO null check?
+                    q = RegionMatrix[r]['firstChild'] + 1; // TODO null check?
                   }
                 }
                 else {
-                  if (NodeMatrix[n]['y'] < RegionMatrix[r]['centerY']) {
+                  if (NodeMatrix[n]['pos']['y'] < RegionMatrix[r]['centerY']) {
 
                     // Top Right quarter
-                    q = RegionMatrix[r + 2]['firstChild'];
+                    q = RegionMatrix[r]['firstChild'] + 2;
                   }
                   else {
 
                     // Bottom Right quarter
-                    q = RegionMatrix[r + 3]['firstChild'];
+                    q = RegionMatrix[r]['firstChild'] + 3;
                   }
                 }
 
@@ -420,7 +428,7 @@ function forceAtlas2(graph, userSettings) {
 
                 RegionMatrix[r]['massCenterY'] =
                   (RegionMatrix[r]['massCenterY'] * RegionMatrix[r]['mass'] +
-                   NodeMatrix[n]['y'] * NodeMatrix[n]['mass']) /
+                   NodeMatrix[n]['pos']['y'] * NodeMatrix[n]['mass']) /
                   (RegionMatrix[r]['mass'] + NodeMatrix[n]['mass']);
 
                 RegionMatrix[r]['mass'] += NodeMatrix[n]['mass'];
@@ -461,8 +469,8 @@ function forceAtlas2(graph, userSettings) {
                   g = RegionMatrix[r]['firstChild'];
                   RegionMatrix[g] = {};
                   RegionMatrix[g]['node'] = -1;
-                  RegionMatrix[g]['centerX'] = RegionMatrix[r, 'centerX'] - w;
-                  RegionMatrix[g]['centerY'] = RegionMatrix[r, 'centerY'] - w;
+                  RegionMatrix[g]['centerX'] = RegionMatrix[r]['centerX'] - w;
+                  RegionMatrix[g]['centerY'] = RegionMatrix[r]['centerY'] - w;
                   RegionMatrix[g]['size'] = w;
                   RegionMatrix[g]['nextSibling'] = g + 1;
                   RegionMatrix[g]['firstChild'] = -1;
@@ -525,19 +533,19 @@ function forceAtlas2(graph, userSettings) {
                     else {
 
                       // Bottom Left quarter
-                      q = RegionMatrix[r + 1]['firstChild'] + W.ppr;
+                      q = RegionMatrix[r]['firstChild'] + 1;
                     }
                   }
                   else {
-                    if (NodeMatrix[RegionMatrix[r]['node']]['y'] < RegionMatrix[r]['centerY']) {
+                    if (NodeMatrix[RegionMatrix[r]['node']]['pos']['y'] < RegionMatrix[r]['centerY']) {
 
                       // Top Right quarter
-                      q = RegionMatrix[r + 2]['firstChild'];
+                      q = RegionMatrix[r]['firstChild'] + 2;
                     }
                     else {
 
                       // Bottom Right quarter
-                      q = RegionMatrix[r + 3]['firstChild'];
+                      q = RegionMatrix[r]['firstChild'] + 3;
                     }
                   }
 
@@ -545,6 +553,7 @@ function forceAtlas2(graph, userSettings) {
                   RegionMatrix[r]['mass'] = NodeMatrix[RegionMatrix[r]['node']]['mass'];
                   RegionMatrix[r]['massCenterX'] = NodeMatrix[RegionMatrix[r]['node']]['pos']['x'];
                   RegionMatrix[r]['massCenterY'] = NodeMatrix[RegionMatrix[r]['node']]['pos']['y'];
+
 
                   RegionMatrix[q]['node'] = RegionMatrix[r]['node'];
                   RegionMatrix[r]['node'] = -1;
@@ -558,19 +567,19 @@ function forceAtlas2(graph, userSettings) {
                     }
                     else {
                       // Bottom Left quarter
-                      q2 = RegionMatrix[r + 1]['firstChild'];
+                      q2 = RegionMatrix[r]['firstChild'] + 1;
                     }
                   }
                   else {
-                    if(NodeMatrix[n]['y'] < RegionMatrix[r]['centerY']) {
+                    if(NodeMatrix[n]['pos']['y'] < RegionMatrix[r]['centerY']) {
 
                       // Top Right quarter
-                      q2 = RegionMatrix[r + 2]['firstChild'];
+                      q2 = RegionMatrix[r]['firstChild'] + 2;
                     }
                     else {
 
                       // Bottom Right quarter
-                      q2 = RegionMatrix[r + 3]['firstChild'];
+                      q2 = RegionMatrix[r]['firstChild'] + 3;
                     }
                   }
 
@@ -593,7 +602,6 @@ function forceAtlas2(graph, userSettings) {
         }
       }
 
-
       // 2) Repulsion
       //--------------
       // NOTES: adjustSize = antiCollision & scalingRatio = coefficient
@@ -607,6 +615,7 @@ function forceAtlas2(graph, userSettings) {
           // Computing leaf quad nodes iteration
 
           r = 0; // Starting with root region
+
           while (true) {
 
             if (RegionMatrix[r]['firstChild'] >= 0) {
@@ -675,7 +684,7 @@ function forceAtlas2(graph, userSettings) {
               // The region has no sub-region
               // If there is a node r[0] and it is not n, then repulse
 
-              if (RegionMatrix[r]['node'] >= 0 && RegionMatrix[r]['node'] !== n) {
+              if (RegionMatrix[r]['node'] !== -1 && RegionMatrix[r]['node'] !== n) {
                 xDist = NodeMatrix[n]['pos']['x'] - NodeMatrix[RegionMatrix[r]['node']]['pos']['x'];
                 yDist = NodeMatrix[n]['pos']['y'] - NodeMatrix[RegionMatrix[r]['node']]['pos']['y'];
 
@@ -789,7 +798,6 @@ function forceAtlas2(graph, userSettings) {
         }
       }
 
-
       // 3) Gravity
       //------------
       g = settings.gravity / settings.scalingRatio;
@@ -823,7 +831,6 @@ function forceAtlas2(graph, userSettings) {
           NodeMatrix[n]['dy'] -= yDist * factor;
         //}
       }
-
 
       // 4) Attraction
       //---------------
@@ -1046,13 +1053,41 @@ function forceAtlas2(graph, userSettings) {
       // Counting one more iteration
       W.iterations++;
 
-      var tx = 0, ty = 0, td;
+      // updating
       for (n in NodeMatrix) {
+        //if (NodeMatrix.hasOwnPropery(n)) {
+
+        //}
+      }
+
+
+
+
+
+      // here calculting the graph boundaries and the change amount
+      var tx = 0, ty = 0, td;
+      minX = Infinity;
+      maxX = -Infinity;
+      minY = Infinity;
+      maxY = -Infinity;
+
+      for (n in NodeMatrix) {
+        minX = Math.min(minX, NodeMatrix[n]['pos']['x']);
+        maxX = Math.max(maxX, NodeMatrix[n]['pos']['x']);
+        minY = Math.min(minY, NodeMatrix[n]['pos']['y']);
+        maxY = Math.max(maxY, NodeMatrix[n]['pos']['y']);
+
         tx += Math.abs(NodeMatrix[n]['dx']);
         ty += Math.abs(NodeMatrix[n]['dy']);
+
       }
+
+      graphRect.x1 = minX;
+      graphRect.y1 = minY;
+      graphRect.x2 = maxX;
+      graphRect.y2 = maxY;
+
       td = Math.sqrt(tx * tx + ty * ty)/NodesCount;
-      //console.log(td);
 
       return td < settings.stableThreshold;
   }

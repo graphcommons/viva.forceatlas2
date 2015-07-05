@@ -212,7 +212,6 @@
 
       // 1) Initializing layout data
       //-----------------------------
-
       // Resetting positions & computing max values
       for (n = 0; n < W.nodesLength; n += W.ppn) {
         NodeMatrix[np(n, 'old_dx')] = NodeMatrix[np(n, 'dx')];
@@ -277,6 +276,7 @@
             // Are there sub-regions?
 
             // We look at first child index
+
             if (RegionMatrix[rp(r, 'firstChild')] >= 0) {
 
               // There are sub-regions
@@ -503,6 +503,7 @@
           // Computing leaf quad nodes iteration
 
           r = 0; // Starting with root region
+
           while (true) {
 
             if (RegionMatrix[rp(r, 'firstChild')] >= 0) {
@@ -686,7 +687,6 @@
         }
       }
 
-
       // 3) Gravity
       //------------
       g = W.settings.gravity / W.settings.scalingRatio;
@@ -718,8 +718,6 @@
         NodeMatrix[np(n, 'dx')] -= xDist * factor;
         NodeMatrix[np(n, 'dy')] -= yDist * factor;
       }
-
-
 
       // 4) Attraction
       //---------------
@@ -938,6 +936,25 @@
 
       // Counting one more iteration
       W.iterations++;
+
+      // var strOutput = [];
+      // for (var ssss = 0; ssss < RegionMatrix.length; ssss += W.ppr) {
+      //   strOutput.push('region ' + ssss/9);
+      //   strOutput.push('node ' + RegionMatrix[rp(ssss, 'node')]);
+      //   strOutput.push('centerX ' + RegionMatrix[rp(ssss, 'centerX')]);
+      //   strOutput.push('centerY ' + RegionMatrix[rp(ssss, 'centerY')]);
+      //   strOutput.push('size ' + RegionMatrix[rp(ssss, 'size')]);
+      //   strOutput.push('nextSibling ' + RegionMatrix[rp(ssss, 'nextSibling')]);
+      //   strOutput.push('firstChild ' + RegionMatrix[rp(ssss, 'firstChild')]);
+      //   strOutput.push('mass ' + RegionMatrix[rp(ssss, 'mass')]);
+      //   strOutput.push('massCenterX ' + RegionMatrix[rp(ssss, 'massCenterX')]);
+      //   strOutput.push('massCenterY ' + RegionMatrix[rp(ssss, 'massCenterY')]);
+      // }
+      // for (ssss = 0; ssss < W.nodesLength; ssss += W.ppn) {
+      //   strOutput.push(ssss / W.ppn + ' ' + NodeMatrix[np(ssss, 'x')] + ' ' + NodeMatrix[np(ssss, 'y')]);
+      // }
+      // console.log(strOutput.join('\n'));
+      // debugger;
     }
 
     /**
