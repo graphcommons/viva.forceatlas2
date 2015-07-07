@@ -1053,17 +1053,6 @@ function forceAtlas2(graph, userSettings) {
       // Counting one more iteration
       W.iterations++;
 
-      // updating
-      for (n in NodeMatrix) {
-        //if (NodeMatrix.hasOwnPropery(n)) {
-
-        //}
-      }
-
-
-
-
-
       // here calculting the graph boundaries and the change amount
       var tx = 0, ty = 0, td;
       minX = Infinity;
