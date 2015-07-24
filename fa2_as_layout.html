@@ -29,16 +29,16 @@
           <label>edgeWeightInfluence</label><input type="number" step="any" value="0" id="edgeWeightInfluence"/>
         </li>
         <li>
-          <label>scalingRatio</label><input type="number" step="any" value="1" id="scalingRatio"/>
+          <label>scalingRatio</label><input type="number" step="any" value="15" id="scalingRatio"/>
         </li>
         <li>
           <label>strongGravityMode</label><input type="checkbox" id="strongGravityMode"/>
         </li>
         <li>
-          <label>gravity</label><input type="number" step="any" value="1" id="gravity"/>
+          <label>gravity</label><input type="number" step="any" value="0.2" id="gravity"/>
         </li>
         <li>
-          <label>slowDown</label><input type="number" step="any" value="1" id="slowDown"/>
+          <label>slowDown</label><input type="number" step="any" value="5" id="slowDown"/>
         </li>
         <li>
           <label>barnesHutOptimize</label><input type="checkbox" id="barnesHutOptimize"/>
@@ -53,7 +53,7 @@
           <label>iterationsPerRender</label><input type="number" value="1" id="iterationsPerRender"/>
         </li>
         <li>
-          <label>stableThreshold</label><input type="number" value="2.0" step="any" id="stableThreshold"/>
+          <label>stableThreshold</label><input type="number" value="0.01" step="any" id="stableThreshold"/>
         </li>
       </ul>
       <button id="btnUpdateConfig">Update</button>
@@ -65,12 +65,20 @@
 
         var graph = Viva.Graph.graph();
         var layout = GraphCommons.Layout.forceAtlas2(graph, {
-          stableThreshold: 2.0,
+          stableThreshold: 0.01,
           scalingRatio: 1,
           slowDown: 1,
-          barnesHutOptimize: true
+          gravity: 1,
+          barnesHutOptimize: false
         });
         var svgGraphics = Viva.Graph.View.svgGraphics();
+        svgGraphics.node(function (node) {
+          return Viva.Graph.svg('circle')
+            .attr('fill', '#00f')
+            .attr('r', 2);
+        }).placeNode(function (nodeUI, pos) {
+          nodeUI.attr('cx', pos.x).attr('cy', pos.y)
+        });
 
         GraphCommons.Helper.addData(graph);
 

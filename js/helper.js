@@ -1,6 +1,6 @@
 var GraphCommons = GraphCommons || {};
 (function() {
-  GraphCommons.Helper = {};
+  GraphCommons.Helper = GraphCommons.Helper || {};
 
   GraphCommons.Helper.initSettings = function (sigma) {
     var fnUpdateConfig = function() {
@@ -31,6 +31,7 @@ var GraphCommons = GraphCommons || {};
     var divSettings = document.getElementById('settings');
     var cbToggleSettings = document.getElementById('cbToggleSettings');
     cbToggleSettings.addEventListener('change', function() {
+      console.log('www');
       if (this.checked) {
         divSettings.classList.remove('not-shown');
       }
