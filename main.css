@@ -43,3 +43,9 @@ body, svg {
 .not-shown {
   display: none;
 }
+
+div.welcome {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
